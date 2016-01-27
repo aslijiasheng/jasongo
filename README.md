@@ -7,9 +7,8 @@
 go get github.com/labstack/echo
 go get github.com/go-xorm/xorm
 git clone https://github.com/aslijiasheng/jasongo
-cd jasongo && mkdir -p server
-mkdir -p website/css
-mkdir -p website/script
-mkdir -p website/public
+cd jasongo
 ```
+#Comment
 
+项目使用php来做前端数据渲染,用echogo来做api接口获取相关数据
