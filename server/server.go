@@ -1,49 +1,80 @@
 package main
 
 import (
-	"html/template"
-	"io"
+	"time"
+
+	"../com.application.system/config"
+	"../model"
+	// "../com.application.system/log"
+	"log"
 	"net/http"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-xorm/xorm"
 
 	"github.com/labstack/echo"
 	mw "github.com/labstack/echo/middleware"
 )
 
-type (
-	Template struct {
-		templates *template.Template
-	}
-
-	user struct {
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	}
-)
-
 var (
-	users map[string]user
+	//初始化xorm引擎
+	engine *xorm.Engine
+
+	err           error
+	tcUser        model.TcUser
+	tcExpressMail model.TcExpressMail
+	tcExpressTake model.TcExpressTake
 )
 
-func (t *Template) Render(w io.Writer, name string, data interface{}) error {
-	return t.templates.ExecuteTemplate(w, name, data)
-}
-
-// Handler
-func hello(c *echo.Context) error {
-	return c.Render(http.StatusOK, "hello", "World")
-	// return c.String(http.StatusOK, "Hello, World!\n")
-}
-
-func getUsers(c *echo.Context) error {
+// API Handler
+/**
+ *  快递用户接口GET
+ */
+func expressListUsers(c *echo.Context) error {
+	var users []model.TcUser
+	err := engine.Find(&users)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "StatusInternalServerError")
+	}
 	return c.JSON(http.StatusOK, users)
+}
+
+/**
+ * 快递查询用户接口POST
+ */
+func expressQueryUsers(c *echo.Context) error {
+	return c.JSON(http.StatusOK, "expressQueryUser")
+}
+
+/**
+ *  快递通知接口
+ */
+func expressEmailMessage(c *echo.Context) error {
+	userID := c.Form("userID")         //收件人ID
+	takeUserID := c.Form("takeUserID") //取件人ID
+	return c.JSON(http.StatusOK, tcUser)
+}
+
+/**
+ *  快递取件接口
+ */
+func expressTake(c *echo.Context) error {
+	expressID := c.Form("expressID") //取件ID
+	userID := c.Form("userID")       //取件人ID
+	upUsers := &model.TcExpressTake{
+		ExpressTakeUserId: userID,
+		ExpressTakeDate:   time.Now(),
+	}
+	_, err := engine.Where("express_take_express_id = ?", expressID).Cols("express_take_user_id", "express_take_date").Update(upUsers)
+	if err != nil {
+		return c.JSON(http.StatusOK, "expresstake is failed")
+	}
+	return c.JSON(http.StatusOK, "expresstake is success")
 }
 
 func main() {
 
-	t := &Template{
-		templates: template.Must(template.ParseGlob("../website/public/hello.html")),
-	}
-
+	go putEnginePoll()
 	// Echo instance
 	e := echo.New()
 
@@ -55,33 +86,27 @@ func main() {
 	e.Use(mw.Recover())
 	e.Use(mw.Gzip())
 
-	e.SetRenderer(t)
-
 	// Routes
-	e.Get("/", hello)
-
-	e.Use(func(c *echo.Context) error {
-		println(c.Path()) // Prints `/users/:name`
-		return nil
-	})
-
-	e.Get("/users", getUsers)
-
-	e.Get("/users/:name", func(c *echo.Context) error {
-		// By name
-		name := c.Param("name")
-		return c.String(http.StatusOK, name)
-	})
+	e.Get("/expressListUsers", expressListUsers)
+	e.Post("/expressEmailMessage", expressEmailMessage)
+	e.Post("/expressQueryUsers", expressQueryUsers)
+	e.Post("/expressTake", expressTake)
 
 	// Start server
 	e.Run(":1323")
 }
 
-func init() {
-	users = map[string]user{
-		"1": user{
-			ID:   "1",
-			Name: "Wreck-It Ralph",
-		},
+func putEnginePoll() {
+	connString := config.Dsn
+	engine, err = xorm.NewEngine("mysql", connString)
+	if config.Debug {
+		engine.ShowSQL = true   //则会在控制台打印出生成的SQL语句；
+		engine.ShowDebug = true //则会在控制台打印调试信息；
+		engine.ShowWarn = true  //则会在控制台打印警告信息；
+	}
+	engine.SetMaxIdleConns(1000)
+	engine.SetMaxOpenConns(2000)
+	if err != nil {
+		log.Fatal(err)
 	}
 }
