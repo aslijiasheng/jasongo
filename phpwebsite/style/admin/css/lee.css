@@ -1,0 +1,362 @@
+
+/*--------选中按钮的时候不会有一般的颜色不同--------*/
+.btn:focus {
+    background-position: 0;
+	background:#0088CC;
+}
+
+
+span.required {
+    color: #FF0000;
+}
+
+/*--------修改jquery-ui菜单样式--------
+.ui-widget-content a {color:#0088CC;}
+.ui-widget {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+}
+*/
+/*--------charisma菜单样式--------*/
+.form-actions{ background-color:#FFF}
+
+/*--------修改bootcss样式---------*/
+.navbar .brand {
+    color: #fff;
+	height:auto;
+}
+
+.grid-view {
+    padding-top: 20px;
+}
+/*面包屑样式*/
+
+.breadcrumb {
+    background: -moz-linear-gradient(center bottom , #DDD 0%, #FFF 100%) repeat scroll 0 0 transparent;
+    border: 1px solid #CCCCCC;
+	margin-top:0px !important;
+	padding: 0px 0.75em;
+	line-height: 3em;
+}
+
+/*-----------lee自定义样式------------*/
+
+
+/*TbGridView的summary样式，设计成靠左的*/
+.grid-view .summary {
+    float: left;
+    margin-bottom: 10px 5px;
+    text-align: left;
+}
+
+/*TbGridView的pager样式，列表的分页样式,设计成靠右*/
+.pagination {
+	float: right;
+    margin: 0px;
+    text-align: right;
+}
+
+/*满屏隐藏div 用于全屏遮罩*/
+#full-screen{
+	width:100%;
+	height:100%;
+	padding:8px;
+	margin:0px;
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 10000;
+	display:none;
+	background:#ffffcc;
+	overflow:hidden;
+}
+
+/*高级查询分两列显示*/
+.from-input .form-horizontal{
+	width:700px;
+}
+.from-input .form-horizontal .control-group{
+	width:350px;
+	float:left;
+}
+.from-input .form-actions{
+	float:left;
+	margin-top:20px;
+	width:700px;
+	padding:20px 0px;
+	text-align:center;
+}
+
+.from-input .form-horizontal .control-label {
+    width: 80px;
+}
+.from-input .form-horizontal .controls {
+    margin-left: 100px;
+	width:100px;
+}
+
+
+/*解决checkbox点击触发过宽的问题*/
+.lee_checkbox li{
+	margin-top:5px;
+	float: left;
+	width:100%;
+}
+.lee_checkbox li input,
+.lee_checkbox li label{
+	float: left;
+	margin-right: 8px;
+}
+
+/*查看页面分标题和类容样式*/
+.leetable .title{
+	background-color:#F9F9F9;
+	font-weight: bold;
+	text-align:right;
+}
+
+/*按钮*/
+.leebutton a{
+	margin-right:10px;
+}
+/*tabs页签样式*/
+.leetabs .ui-widget-header {
+    background:#fff;
+    border: 1px solid #DDD;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+}
+
+.leetabs .ui-widget-content {
+	background: #FFFFFF;
+    border-color:#DDD;
+}
+
+.leetabs .ui-state-default {
+    background: #E6E6E6;
+	border-color:#DDD;
+}
+
+
+.leetabs .ui-state-active {
+	background: #fff;
+	border-color:#DDD;
+}
+
+.leetabs .ui-state-active.ui-state-hover{
+	background: #fff;
+	border-color:#DDD;
+}
+
+.leetabs .ui-state-hover {
+	border-color:#bbb;
+	background: #ddd;
+}
+
+.leetabs a:focus,.leetabs a,.btn:focus{  
+    outline:none;  
+}
+
+/*让列表页面的a标签不要影响他的宽度*/
+.grid-view table.items th:hover a:after {
+	right: 0px;
+}
+
+/*把left-sidebar的样式全部拿出来！改为all-sidebar，做一个不需要分左右的样式*/
+  .all-sidebar {
+    margin-right: 0px; }
+    .all-sidebar .widget {
+      background: #fafafa;
+      border: 1px solid #cfcfcf;
+      clear: both;
+      margin-top: 0px;
+      margin-bottom: 30px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px; }
+      .all-sidebar .widget .widget-header {
+        background-color: #e8e8e8;
+        /* Fallback Color */
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#e8e8e8));
+        /* Saf4+, Chrome */
+        background-image: -webkit-linear-gradient(top, #fcfcfc, #e8e8e8);
+        /* Chrome 10+, Saf5.1+, iOS 5+ */
+        background-image: -moz-linear-gradient(top, #fcfcfc, #e8e8e8);
+        /* FF3.6 */
+        background-image: -ms-linear-gradient(top, #fcfcfc, #e8e8e8);
+        /* IE10 */
+        background-image: -o-linear-gradient(top, #fcfcfc, #e8e8e8);
+        /* Opera 11.10+ */
+        background-image: linear-gradient(top, #fcfcfc, #e8e8e8);
+        -webkit-border-radius: 2px 2px 0 0;
+        -moz-border-radius: 2px 2px 0 0;
+        border-radius: 2px 2px 0 0;
+        border-bottom: 1px solid #cfcfcf;
+        height: 24px;
+        line-height: 24px;
+        padding: 10px; }
+        .all-sidebar .widget .widget-header .title {
+          color: #333333;
+          float: left;
+          font-weight: bold;
+          font-size: 16px; }
+          .all-sidebar .widget .widget-header .title .attribution,
+		  .all-sidebar .widget .widget-header .title .mini-title {
+            font-size: 11px;
+            padding-left: 4px;
+            color: #b3b3b3;
+            font-weight: normal; }
+            .all-sidebar .widget .widget-header .title .attribution a,
+			.all-sidebar .widget .widget-header .title .mini-title a {
+              color: #b3b3b3; }
+        .all-sidebar .widget .widget-header span.tools {
+          padding: 0;
+          float: right;
+          margin: 0; }
+          .all-sidebar .widget .widget-header span.tools > a {
+            display: inline-block;
+            margin-right: 5px;
+            color: #666666;
+            margin-top: 3px; }
+            .all-sidebar .widget .widget-header span.tools > a:hover {
+              text-decoration: none;
+              opacity: .6; }
+          .all-sidebar .widget .widget-header span.tools > a.btn {
+            color: white;
+            margin-top: 0; }
+      .all-sidebar .widget .widget-body {
+        padding: 10px;
+        border-bottom: 1px solid #b3b3b3;
+        -webkit-border-radius: 0 0 2px 2px;
+        -moz-border-radius: 0 0 2px 2px;
+        border-radius: 0 0 2px 2px; }
+
+/*  Media Queries  */
+@media (min-width: 768px) and (max-width: 979px) {
+    .all-sidebar { margin-right: 0px; }
+}
+
+@media (max-width: 767px) {
+	.all-sidebar { margin-right: 0px; }
+	.all-sidebar .widget .widget-header .tools { display: none; }
+	.all-sidebar .widget .widget-header .mini-title { display: none; }
+}
+
+@media (max-width: 480px) {
+	.all-sidebar { margin-right: 0px; }
+	.all-sidebar .widget .widget-header .tools { display: none; }
+	.all-sidebar .widget .widget-header .mini-title { display: none; }
+}
+
+/*添加*/
+.sub-nav li .selected {
+	color: #FFFFFF;
+    font-size: 16px;
+    line-height: 16px;
+}
+
+/*解决下拉框不显示字的问题*/
+.btn-group {
+    font-size: inherit;
+}
+
+.btn-group + .btn-group {
+    margin-left: 0px;
+}
+
+.btn-group > .btn {
+    font-size: 14px;
+}
+
+
+.sign-in-container .login-wrapper .content .input {
+    border-radius: 2px;
+    box-shadow: none;
+    color: #666;
+}
+
+.table td.TbLeft{
+	width:15%;
+	text-align:right;
+	font-weight:bold;
+	color: #0DAED3;
+	
+}
+
+.table td.TbRight{
+	width:35%;
+	background-color: #fff;
+}
+
+.datetimepicker.dropdown-menu {
+	background-color: #fff;
+}
+
+/*简单查询的样式设计*/
+.SimpleSelect{
+	float: right;
+	height: 50px;
+}
+.SimpleSelect ul li{
+	float: left;
+	margin-left: 5px;
+}
+
+.btn-toolbar {
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+.group-text {
+    line-height: 30px;
+}
+
+/**/
+
+.tab-content {
+	overflow: inherit;
+}
+
+/*input等横向排列样式*/
+.lee_input_combination{
+	height:40px;
+}
+.lee_input_combination ul{
+	float: right;
+}
+.lee_input_combination ul li {
+	float: left;
+	margin-left:5px;
+}
+
+.dropdown-submenu > a:after {
+    margin-right: 5px;
+    margin-top: -15px;
+}
+
+/*按钮里的form不要换行*/
+.leebutton form{
+	float: left;
+}
+
+/*高级查询样式*/
+.seniorquery_line{
+	padding-top:5px;
+}
+
+.seniorquery_line td{
+	vertical-align:top;
+}
+
+.seniorquery_line select,
+.seniorquery_line input{
+	margin-left:5px;
+}
+
+th{
+	background-color: #fff;
+}
+
+.table tbody tr.hz td {
+    background-color: #fff;
+}

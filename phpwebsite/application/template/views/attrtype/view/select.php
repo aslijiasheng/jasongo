@@ -1,0 +1,1 @@
+<?php echo $listData_value['{#obj_name#}_{#lll|attr_name#}_arr']['enum_name'];?>

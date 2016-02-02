@@ -1,0 +1,34 @@
+.chosen-container > .chosen-single, [class*="chosen-container"] > .chosen-single {
+    height: 34px;
+    line-height: 32px;
+}
+.help-block {
+    /*color: #737373;*/
+    display: block;
+    line-height: 32px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.form-group {
+    margin-bottom: 0px;
+}
+
+
+.input-sm {
+    height: 34px;
+}
+
+select {
+    height: 34px;
+}
+
+.ui-jqgrid-btable .input-group-addon {
+    padding: 4px 10px;
+}
+
+
+/**/
+.lee_wrap{
+    word-break:break-all;word-wrap:break-word;
+}

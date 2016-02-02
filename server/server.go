@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strconv"
 	"time"
 
 	"../com.application.system/config"
@@ -29,17 +30,19 @@ var (
 )
 
 const (
-	expressTodo            = iota //待发
-	expressSucc                   //发送成功
-	expressFaild                  //发送失败
-	expressRecSend                //重发
-	expressQueryUserFailed        //用户查询失败
-	expressUserNameEmpty          //用户不能为空
-	expressUserPhoneEmpty         //用户手机不能为空
-	expressMailFailed             //用户邮件发送失败
-	expressMailSucc               //用户邮件发送成功
-	expressTakeFailed             //用户取件更新失败
-	expressTakeSucc               //用户取件更新成功
+	expressTodo            = 10001 //待发
+	expressSucc            = 10002 //发送成功
+	expressFaild           = 10003 //发送失败
+	expressRecSend         = 10004 //重发
+	expressQueryUserFailed = 10005 //用户查询失败
+	expressUserNameEmpty   = 10006 //用户不能为空
+	expressUserPhoneEmpty  = 10007 //用户手机不能为空
+	expressMailFailed      = 10008 //用户邮件发送失败
+	expressMailSucc        = 10009 //用户邮件发送成功
+	expressTakeFailed      = 10010 //用户取件更新失败
+	expressTakeSucc        = 10011 //用户取件更新成功
+	expressUserIDEmpty     = 10012 //用户ID不能为空
+	expressTakeUserFaield  = 10013 //用户取件查询失败
 )
 
 type errorMsg struct {
@@ -48,6 +51,23 @@ type errorMsg struct {
 }
 
 // API Handler
+
+/**
+ *  快递用户取件查询接口GET
+ */
+func expressTakeUser(c *echo.Context) error {
+	userID := c.Query("userID")
+	if userID == "" {
+		return c.JSON(http.StatusOK, errorMsg{errorNo: expressUserIDEmpty, errorMsg: "expressUserIDEmpty"})
+	}
+	var express []model.TcExpressMail
+	err := engine.Where("express_to_user_id = ?", userID).Cols("*").Find(&express)
+	if err != nil {
+		return c.JSON(http.StatusOK, errorMsg{errorNo: expressTakeUserFaield, errorMsg: "expressTakeUserFaield"})
+	}
+	return c.JSON(http.StatusOK, express)
+}
+
 /**
  *  快递用户接口GET
  */
@@ -57,7 +77,11 @@ func expressListUsers(c *echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusOK, errorMsg{errorNo: expressQueryUserFailed, errorMsg: "expressQueryUserFailed"})
 	}
-	return c.JSON(http.StatusOK, users)
+	userModules := make(map[string]model.TcUser)
+	for _, val := range users {
+		userModules[strconv.Itoa(val.UserId)] = val
+	}
+	return c.JSON(http.StatusOK, userModules)
 }
 
 /**
@@ -89,16 +113,14 @@ func expressEmailMessage(c *echo.Context) error {
 	var takeUser model.TcUser
 	engine.Id(userID).Get(&takeUser) //通过取件人ID获取取件人信息
 	go sendMail(takeUser)
-	//留给send mail
-	expressMail := &model.TcExpressMail{
+	_, err = engine.Insert(&model.TcExpressMail{
 		ExpressFromUserId:    userID,
 		ExpressToUserId:      takeUserID,
 		ExpressCreateUserId:  userID,
 		ExpressCreateDate:    time.Now(),
 		ExpressToExpressDate: time.Now(),
 		ExpressTakeStatus:    expressSucc,
-	}
-	_, err = engine.Insert(expressMail)
+	})
 	if err != nil {
 		return c.JSON(http.StatusOK, errorMsg{errorNo: expressMailFailed, errorMsg: "expressMailFailed"})
 	}
@@ -114,7 +136,8 @@ func sendMail(takeUser model.TcUser) {
 	email.Config.Username = "aslijiasheng@163.com"
 	email.Config.Password = "as6938870"
 
-	mail := email.NewBriefMessage("您有一封快递到达!", "您有一封快递到达一号门", takeUser.UserEmail)
+	// mail := email.NewBriefMessage("您有一封快递到达!", "您有一封快递到达一号门", takeUser.UserEmail)
+	mail := email.NewBriefMessage("您有一封快递到达!", "您有一封快递到达一号门", "963781990@qq.com")
 	err := mail.Send()
 	if err != nil {
 		log.Fatal(err)
@@ -127,11 +150,21 @@ func sendMail(takeUser model.TcUser) {
 func expressTake(c *echo.Context) error {
 	expressID := c.Form("expressID") //取件ID
 	userID := c.Form("userID")       //取件人ID
+	expressIdTmp, err := strconv.ParseInt(expressID, 10, 32)
+	expressId := int(expressIdTmp)
 	upUsers := &model.TcExpressTake{
-		ExpressTakeUserId: userID,
-		ExpressTakeDate:   time.Now(),
+		ExpressTakeUserId:    userID,
+		ExpressTakeDate:      time.Now(),
+		ExpressTakeExpressId: expressId,
 	}
-	_, err := engine.Where("express_take_express_id = ?", expressID).Cols("express_take_user_id", "express_take_date").Update(upUsers)
+	_, err = engine.AllCols().Insert(upUsers)
+	if err != nil {
+		return c.JSON(http.StatusOK, errorMsg{errorNo: expressTakeFailed, errorMsg: "expressTakeFailed"})
+	}
+	upMailUsers := &model.TcExpressMail{
+		ExpressTakeStatus: expressTakeSucc,
+	}
+	_, err = engine.Where("express_id = ?", expressID).Cols("express_take_status").Update(upMailUsers)
 	if err != nil {
 		return c.JSON(http.StatusOK, errorMsg{errorNo: expressTakeFailed, errorMsg: "expressTakeFailed"})
 	}
@@ -162,6 +195,7 @@ func main() {
 	e.Post("/expressEmailMessage", expressEmailMessage)
 	e.Post("/expressQueryUsers", expressQueryUsers)
 	e.Post("/expressTake", expressTake)
+	e.Get("/expressTakeUser", expressTakeUser)
 
 	loggerService.FileHandle = "server.go"
 	loggerService.ErrMsg = string("1323 succ server.go")

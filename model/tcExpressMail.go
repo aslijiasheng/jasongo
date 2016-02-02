@@ -10,6 +10,6 @@ type TcExpressMail struct {
 	ExpressToUserId      string    `json:"express_to_user_id" xorm:"not null VARCHAR(20)"`
 	ExpressCreateUserId  string    `json:"express_create_user_id" xorm:"not null VARCHAR(20)"`
 	ExpressCreateDate    time.Time `json:"express_create_date" xorm:"not null default 'CURRENT_TIMESTAMP' TIMESTAMP"`
-	ExpressToExpressDate time.Time `json:"express_to_express_date" xorm:"not null default '0000-00-00 00:00:00' TIMESTAMP"`
+	ExpressToExpressDate time.Time `json:"express_to_express_date" xorm:"not null TIMESTAMP"`
 	ExpressTakeStatus    int       `json:"express_take_status" xorm:"not null INT(1)"`
 }

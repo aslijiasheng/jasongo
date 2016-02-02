@@ -1,0 +1,1 @@
+<div>{#obj_name#}文件内容</div>
